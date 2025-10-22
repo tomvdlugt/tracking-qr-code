@@ -9,5 +9,6 @@ scrape_configs:
 
   - job_name: "flask_tracker"
     metrics_path: /metrics
+    scheme: https
     static_configs:
-      - targets: ["qr-tracker:8000"]
+      - targets: ["${FLASK_TRACKER_URL}"]
