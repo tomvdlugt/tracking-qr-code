@@ -22,6 +22,11 @@ def track(tag):
 def metrics():
   return generate_latest(), 200, {"content-type": CONTENT_TYPE_LATEST}
 
+@app.route("/")
+def index():
+    return "<p>QR Tracking redirect service is running </p>"
+
+
 if __name__ == "__main__":
     import os
     port = int(os.getenv("PORT", 8000))  # Railway injects PORT
