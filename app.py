@@ -21,3 +21,8 @@ def track(tag):
 @app.route("/metrics")
 def metrics():
   return generate_latest(), 200, {"content-type": CONTENT_TYPE_LATEST}
+
+if __name__ == "__main__":
+    import os
+    port = int(os.getenv("PORT", 8000))  # Railway injects PORT
+    app.run(host="0.0.0.0", port=port)
