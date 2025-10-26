@@ -11,22 +11,26 @@ port = os.getenv("PORT")
 c = Counter("qr_clicks_total", "Amount of clicks on QR code", ["tag"])
 allowed_tags = {"facebook", "qr", "website"}
 
-@app.route("/t/")
-def track_missing():
-    print("Missing tag in request")
-    return "Missing tag", 400
-
-
 @app.route("/t/<tag>")
 def track(tag):
-  print(f"Tag received: '{tag}' | Allowed: {tag in allowed_tags}")
-  tag = tag.lower().strip("/")
-  if tag not in allowed_tags:
-    return "unkown tag"
-  else:
-    c.labels(tag=tag).inc()
-  return redirect(target_url, code=302)
+    tag = (tag or "").lower().strip("/").strip()
 
+    # Count only known tags, but always redirect
+    if tag in allowed_tags:
+        c.labels(tag=tag).inc()
+        print(f"Tag counted: {tag}")
+    else:
+        print(f"Unknown or missing tag: {tag!r}")
+
+    # Always redirect anyway
+    return redirect(target_url, code=302)
+
+
+# Optional helper for requests that hit /t/ without <tag>
+@app.route("/t/")
+def track_missing():
+    print("Missing tag in path")
+    return redirect(target_url, code=302)
 
 @app.route("/metrics")
 def metrics():
