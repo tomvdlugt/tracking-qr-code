@@ -12,6 +12,7 @@ allowed_tags = {"facebook", "qr", "website"}
 
 @app.route("/t/<tag>")
 def track(tag):
+  print(f"Tag received: '{tag}'")
   tag = tag.lower().strip("/")
   if tag not in allowed_tags:
     return "unkown tag"
