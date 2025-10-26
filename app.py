@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, request
 from dotenv import load_dotenv
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 import os
@@ -14,7 +14,7 @@ allowed_tags = {"facebook", "qr", "website"}
 @app.route("/t/<tag>")
 def track(tag):
     tag = (tag or "").lower().strip("/").strip()
-
+    print(f"Tag={tag}, UA={request.headers.get('User-Agent')}")
     # Count only known tags, but always redirect
     if tag in allowed_tags:
         c.labels(tag=tag).inc()
