@@ -5,14 +5,21 @@ import os
 
 load_dotenv()
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 target_url = os.getenv("TARGET_URL")
 port = os.getenv("PORT")
 c = Counter("qr_clicks_total", "Amount of clicks on QR code", ["tag"])
 allowed_tags = {"facebook", "qr", "website"}
 
+@app.route("/t/")
+def track_missing():
+    print("Missing tag in request")
+    return "Missing tag", 400
+
+
 @app.route("/t/<tag>")
 def track(tag):
-  print(f"Tag received: '{tag}'")
+  print(f"Tag received: '{tag}' | Allowed: {tag in allowed_tags}")
   tag = tag.lower().strip("/")
   if tag not in allowed_tags:
     return "unkown tag"
