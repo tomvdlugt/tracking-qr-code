@@ -12,11 +12,13 @@ allowed_tags = {"facebook", "qr", "website"}
 
 @app.route("/t/<tag>")
 def track(tag):
+  tag = tag.lower().strip("/")
   if tag not in allowed_tags:
-    print("unkown tag")
+    return "unkown tag"
   else:
     c.labels(tag=tag).inc()
   return redirect(target_url, code=302)
+
 
 @app.route("/metrics")
 def metrics():
