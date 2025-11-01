@@ -1,6 +1,6 @@
 from flask import Flask
 from .config import load_config
-from .extensions import limiter, clicks
+from .extensions import limiter
 from .routes import tracking, metrics, health
 
 def create_app():
