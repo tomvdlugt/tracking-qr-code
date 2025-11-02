@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 from flask import Flask, request
 from app.config_check import validate_env
@@ -38,5 +39,8 @@ def create_app():
     app.register_blueprint(tracking.bp)
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
+
+
+    print(f"Flask app initialized on port {os.getenv('PORT')}")
 
     return app
