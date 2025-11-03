@@ -8,8 +8,10 @@ from .extensions import limiter
 from .routes import tracking, metrics, health
 
 def create_app():
-    # Validate environment once per worker
-    validate_env()
+    # Validate environment once per worker. If required envs are not there, throw runtime exception
+    missing = validate_env()
+    if missing:
+        raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
 
     app = Flask(__name__)
     load_config(app)

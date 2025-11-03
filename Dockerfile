@@ -13,7 +13,8 @@ COPY . .
 EXPOSE 8000
 
 # Railway injects $PORT automatically
-CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-8000} app.main:app"]
+CMD ["gunicorn", "--access-logfile", "-", "--error-logfile", "-", "-w", "4", "-b", "0.0.0.0:${PORT:-8000}", "app.main:app"]
+
 
 
 

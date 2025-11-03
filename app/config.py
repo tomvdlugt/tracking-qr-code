@@ -6,50 +6,56 @@ load_dotenv()
 
 class Config:
   """Base configuration (used by default)"""
+  def __init__(self):
+    #flask settings
+    self.DEBUG = os.getenv("FLASK_DEBUG", "false").lower == "true"
+    self.TESTING = os.getenv("FLASK_TESTING", "false").lower == "true"
+    self.SECRET_KEY = os.getenv("SECRET_KEY", "change-me")
 
-  #flask settings
-  DEBUG = os.getenv("FLASK_DEBUG", "false").lower == "true"
-  TESTING = os.getenv("FLASK_TESTING", "false").lower == "true"
-  SECRET_KEY = os.getenv("SECRET_KEY", "change-me")
+    #app-specific settings
+    self.TARGET_URL = os.getenv("TARGET_URL", "https://example.com")
+    self.METRICS_TOKEN = os.getenv("METRICS_TOKEN")
 
-  #app-specific settings
-  TARGET_URL = os.getenv("TARGET_URL", "https://example.com")
-  METRICS_TOKEN = os.getenv("METRICS_TOKEN")
+    #comma seperated list of allowed tags
+    self.ALLOWED_TAGS = set(
+      tag.strip().lower()
+      for tag in os.getenv("ALLOWED_TAGS", "facebook, qr, website").split(",")
+      if tag.strip()
+    )
 
-  #comma seperated list of allowed tags
-  ALLOWED_TAGS = set(
-    tag.strip().lower()
-    for tag in os.getenv("ALLOWED_TAGS", "facebook, qr, website").split(",")
-    if tag.strip()
-  )
+    # Rate limiting config
+    self.DEFAULT_RATE_LIMIT = os.getenv("DEFAULT_RATE_LIMIT", "10 per second")
+    self.TRACK_ROUTE_LIMIT = os.getenv("TRACK_ROUTE_LIMIT", "5 per second")
 
-  # Rate limiting config
-  DEFAULT_RATE_LIMIT = os.getenv("DEFAULT_RATE_LIMIT", "10 per second")
-  TRACK_ROUTE_LIMIT = os.getenv("TRACK_ROUTE_LIMIT", "5 per second")
+    # Prometheus settings
+    self.METRIC_NAME = os.getenv("PROMETHEUS_METRIC_NAME", "qr_clicks_total")
 
-  # Prometheus settings
-  METRIC_NAME = os.getenv("PROMETHEUS_METRIC_NAME", "qr_clicks_total")
-
-  # Port (Railway injects PORT automatically)
-  PORT = int(os.getenv("PORT", 8000))
+    # Port (Railway injects PORT automatically)
+    self.PORT = int(os.getenv("PORT", 8000))
 
 
 class ProductionConfig(Config):
-    """Overrides for production"""
-    DEBUG = False
-    TESTING = False
+    def __init__(self):
+       super().__init__()
+       self.DEBUG = False
+       self.TESTING = False
+
 
 
 class DevelopmentConfig(Config):
     """Overrides for local dev"""
-    DEBUG = True
+    def __init__(self):
+       super().__init__()
+       self.DEBUG = True
+
+
 
 
 def load_config(app):
     """Applies the proper config class to the Flask app."""
     env = os.getenv("FLASK_ENV", "production").lower()
+    config = DevelopmentConfig() if env == "development" else ProductionConfig()
+    app.config.from_mapping({
+        key: value for key, value in config.__dict__.items() if key.isupper()
+    })
 
-    if env == "development":
-        app.config.from_object(DevelopmentConfig)
-    else:
-        app.config.from_object(ProductionConfig)
