@@ -13,8 +13,7 @@ COPY . .
 EXPOSE 8000
 
 # Railway injects $PORT automatically
-CMD ["gunicorn", "--access-logfile", "-", "--error-logfile", "-", "-w", "4", "-b", "0.0.0.0:${PORT:-8000}", "app.main:app"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-
-
-
+CMD ["/entrypoint.sh"]
