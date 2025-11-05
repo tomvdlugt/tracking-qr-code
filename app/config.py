@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-  """Base configuration (used by default)"""
+  """Base configuration (used by default)""" 
   def __init__(self):
     #flask settings
     self.DEBUG = os.getenv("FLASK_DEBUG", "false").lower == "true"
@@ -29,6 +29,7 @@ class Config:
 
     # Prometheus settings
     self.METRIC_NAME = os.getenv("PROMETHEUS_METRIC_NAME", "qr_clicks_total")
+    self.PROM_DIR = os.getenv("PROM_DIR")
 
     # Port (Railway injects PORT automatically)
     self.PORT = int(os.getenv("PORT", 8000))

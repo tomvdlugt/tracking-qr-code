@@ -17,6 +17,18 @@ def create_app():
     load_config(app)
     app.url_map.strict_slashes = False
 
+    # --- Prometheus multiprocess setup ---
+    prom_dir = app.config.get("PROM_DIR", "/tmp/prometheus-multiproc-dir")
+    os.environ["prometheus_multiproc_dir"] = prom_dir
+    os.makedirs(prom_dir, exist_ok=True)
+
+    # Optional: clear old metrics on fresh start
+    for f in os.listdir(prom_dir):
+        try:
+            os.remove(os.path.join(prom_dir, f))
+        except Exception:
+            pass
+
     # --- Clean logger setup ---
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
