@@ -2,7 +2,7 @@
 set -e
 
 # ---- Prometheus multiprocess dir (shared across workers) ----
-export prometheus_multiproc_dir="${PROM_DIR:-/tmp/prometheus-multiproc-dir}"
+export PROMETHEUS_MULTIPROC_DIR="${PROM_DIR:-/tmp/prometheus-multiproc-dir}"
 mkdir -p "$prometheus_multiproc_dir"
 # Clear old shard files from previous runs (safe: Prometheus keeps history)
 rm -f "$prometheus_multiproc_dir"/* 2>/dev/null || true

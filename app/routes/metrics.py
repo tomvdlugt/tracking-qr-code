@@ -14,4 +14,5 @@ def metrics():
 
     registry = CollectorRegistry()
     multiprocess.MultiProcessCollector(registry)
-    return generate_latest(), 200, {"content-type": CONTENT_TYPE_LATEST}
+    data = generate_latest(registry)
+    return data, 200, {"Content-Type": CONTENT_TYPE_LATEST}

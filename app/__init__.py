@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import sys
 from flask import Flask, request
 from app.config_check import validate_env
@@ -19,7 +20,9 @@ def create_app():
     # --- Prometheus multiprocess setup ---
     prom_dir = app.config.get("PROM_DIR") or "/tmp/prometheus-multiproc-dir"
     os.environ["PROMETHEUS_MULTIPROC_DIR"] = str(prom_dir)
-
+    # Clean old metric files before starting (important!)
+    if os.path.exists(prom_dir):
+        shutil.rmtree(prom_dir)
     os.makedirs(prom_dir, exist_ok=True)
 
     # --- Clean logger setup ---
