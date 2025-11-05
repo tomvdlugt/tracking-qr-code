@@ -1,21 +1,23 @@
 #!/usr/bin/env sh
 set -e
 
+# Ensure gunicorn is visible
+export PATH="/usr/local/bin:$PATH"
+
 # ---- Prometheus multiprocess dir (shared across workers) ----
-export PROMETHEUS_MULTIPROC_DIR="${PROM_DIR:-/tmp/prometheus-multiproc-dir}"
 if [ -z "$PROM_DIR" ]; then
-  PROM_DIR="/tmp/prometheus-multiproc-dir"
+  PROM_DIR="/data/prometheus"
 fi
 export PROMETHEUS_MULTIPROC_DIR="$PROM_DIR"
-# Clear old shard files from previous runs (safe: Prometheus keeps history)
-rm -f "$prometheus_multiproc_dir"/* 2>/dev/null || true
+
+mkdir -p "$PROMETHEUS_MULTIPROC_DIR"
+rm -f "$PROMETHEUS_MULTIPROC_DIR"/* 2>/dev/null || true
+
+echo "🔧 PATH is: $PATH"
+echo "🔍 gunicorn binary at: $(which gunicorn || echo 'NOT FOUND')"
 
 # ---- Start Gunicorn ----
-# Notes:
-#  - access/error logs to stdout/stderr so Railway shows correct levels
-#  - WORKERS default 4; tune based on CPU/memory
-#  - PORT provided by Railway; fall back to 8000 locally
-exec gunicorn \
+exec /usr/local/bin/gunicorn \
   --workers "${WORKERS:-4}" \
   --bind "0.0.0.0:${PORT:-8000}" \
   --access-logfile - \
