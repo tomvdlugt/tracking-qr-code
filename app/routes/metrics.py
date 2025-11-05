@@ -13,5 +13,5 @@ def metrics():
         abort(403)
 
     registry = CollectorRegistry()
-    multiprocess.MultiplrocessCollector(registry)
+    multiprocess.MultiProcessCollector(registry)
     return generate_latest(), 200, {"content-type": CONTENT_TYPE_LATEST}
