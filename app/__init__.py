@@ -4,7 +4,6 @@ import sys
 from flask import Flask, request
 from app.config_check import validate_env
 from .config import load_config
-from .extensions import limiter
 from .routes import tracking, metrics, health
 
 def create_app():
@@ -16,18 +15,12 @@ def create_app():
     app = Flask(__name__)
     load_config(app)
     app.url_map.strict_slashes = False
-
+    from .extensions import limiter
     # --- Prometheus multiprocess setup ---
-    prom_dir = app.config.get("PROM_DIR", "/tmp/prometheus-multiproc-dir")
-    os.environ["prometheus_multiproc_dir"] = prom_dir
-    os.makedirs(prom_dir, exist_ok=True)
+    prom_dir = app.config.get("PROM_DIR") or "/tmp/prometheus-multiproc-dir"
+    os.environ["prometheus_multiproc_dir"] = str(prom_dir)
 
-    # Optional: clear old metrics on fresh start
-    for f in os.listdir(prom_dir):
-        try:
-            os.remove(os.path.join(prom_dir, f))
-        except Exception:
-            pass
+    os.makedirs(prom_dir, exist_ok=True)
 
     # --- Clean logger setup ---
     gunicorn_logger = logging.getLogger('gunicorn.error')
