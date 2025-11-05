@@ -18,7 +18,7 @@ def create_app():
     from .extensions import limiter
     # --- Prometheus multiprocess setup ---
     prom_dir = app.config.get("PROM_DIR") or "/tmp/prometheus-multiproc-dir"
-    os.environ["prometheus_multiproc_dir"] = str(prom_dir)
+    os.environ["PROMETHEUS_MULTIPROC_DIR"] = str(prom_dir)
 
     os.makedirs(prom_dir, exist_ok=True)
 
