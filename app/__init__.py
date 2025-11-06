@@ -4,7 +4,9 @@ import shutil
 import sys
 from flask import Flask, request
 from app.config_check import validate_env
+from app.persistence import init_db, load_totals_by_tag
 from app.routes.errors import register_error_handlers
+from app.extensions import clicks
 from .config import load_config
 from .routes import tracking, metrics, health
 
@@ -14,6 +16,14 @@ def create_app():
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
     load_config(app)
+    init_db(app.config.get(app.config["DB_PATH"], "data/clicks.db"))
+
+    # restore clicks total
+    totals = load_totals_by_tag(app.config["DB_PATH"])
+    for tag, total in totals.items():
+        clicks.labels(tag=tag)._value.set(total)
+        app.logger.info(f"Loaded {total} clicks for tag '{tag}' from DB")
+
     app.url_map.strict_slashes = False
     from .extensions import limiter
     # --- Prometheus multiprocess setup ---

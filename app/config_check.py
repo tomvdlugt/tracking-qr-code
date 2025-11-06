@@ -5,6 +5,7 @@ REQUIRED_ENV_VARS = [
   "SECRET_KEY",
   "METRICS_TOKEN",
   "ALLOWED_TAGS",
+  "DB_PATH"
 ]
 
 def validate_env(app):

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-  """Base configuration (used by default)""" 
+  """Base configuration (used by default)"""
   def __init__(self):
     #flask settings
     self.DEBUG = os.getenv("FLASK_DEBUG", "false").lower == "true"
@@ -33,6 +33,9 @@ class Config:
 
     # Port (Railway injects PORT automatically)
     self.PORT = int(os.getenv("PORT", 8000))
+
+    #Database
+    self.DB_PATH = os.getenv("DB_PATH")
 
 
 class ProductionConfig(Config):
