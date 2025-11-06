@@ -13,7 +13,6 @@ def create_app():
     missing = validate_env(app)
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
-    
     load_config(app)
     app.url_map.strict_slashes = False
     from .extensions import limiter
