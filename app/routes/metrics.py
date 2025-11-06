@@ -19,5 +19,6 @@ def metrics():
      # 🧠 Debug logs
     metric_count = len(list(registry.collect()))
     current_app.logger.info(f"/metrics called — {metric_count} metric families registered")
+    current_app.logger.info(f"PROMETHEUS_MULTIPROC_DIR={os.getenv('PROMETHEUS_MULTIPROC_DIR')}")
 
     return data, 200, {"Content-Type": CONTENT_TYPE_LATEST}
