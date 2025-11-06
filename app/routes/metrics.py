@@ -15,4 +15,9 @@ def metrics():
     registry = CollectorRegistry()
     multiprocess.MultiProcessCollector(registry)
     data = generate_latest(registry)
+
+     # 🧠 Debug logs
+    metric_count = len(list(registry.collect()))
+    current_app.logger.info(f"/metrics called — {metric_count} metric families registered")
+
     return data, 200, {"Content-Type": CONTENT_TYPE_LATEST}
