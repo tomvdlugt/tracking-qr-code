@@ -7,7 +7,9 @@ REQUIRED_ENV_VARS = [
   "ALLOWED_TAGS",
 ]
 
-def validate_env():
+def validate_env(app):
   """Ensure all required environments are set correctly"""
   missing = [var for var in REQUIRED_ENV_VARS if not os.getenv(var)]
+  if missing != []:
+    app.logger.error(f"Missing env vars: {missing}")
   return missing
