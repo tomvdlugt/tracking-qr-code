@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, current_app
+from flask import Blueprint, app, redirect, request, current_app
 from app.extensions import limiter, clicks
 import random
 
@@ -14,14 +14,14 @@ def track(tag):
     # Skip known crawlers and bots
     bots = ["bot", "crawl", "spider", "facebookexternalhit", "whatsapp", "discord"]
     if any(b in ua for b in bots):
-        print(f"Ignored bot UA: {ua[:80]}")
+        app.logger.warn(f"Ignored bot UA: {ua[:80]}")
         return redirect(current_app.config["TARGET_URL"], code=302)
 
     if tag in current_app.config["ALLOWED_TAGS"]:
         clicks.labels(tag=tag).inc()
         if random.random() < 0.1:
-            print(f"Counted tag: {tag}")
+            app.log.info(f"Counted tag: {tag}")
     else:
-        print(f"Ignored tag: {tag!r}")
+        app.log.info(f"Ignored tag: {tag!r}")
 
     return redirect(current_app.config["TARGET_URL"], code=302)

@@ -1,5 +1,6 @@
 import os
 import shutil
+from flask import app
 import qrcode
 
 BASE_URL = "https://bestellen.scoutingwateringen.nl/t/"
@@ -8,7 +9,7 @@ OUTPUT_DIR = "qr-codes"
 
 # Remove the folder completely if it exists
 if os.path.exists(OUTPUT_DIR):
-    print("removed existing folder")
+    app.logger.info("removed existing folder")
     shutil.rmtree(OUTPUT_DIR)
 
 # Recreate it fresh
@@ -19,7 +20,7 @@ def generate_qr(tag: str):
     img = qrcode.make(full_url)
     filename = os.path.join(OUTPUT_DIR, f"qr_{tag}.png")
     img.save(filename)
-    print(f"Saved {filename} → {full_url}")
+    app.logger.info(f"Saved {filename} → {full_url}")
 
 if __name__ == "__main__":
     for tag in TAGS:

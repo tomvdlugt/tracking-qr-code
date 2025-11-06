@@ -50,7 +50,6 @@ def create_app():
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
 
-
-    print(f"Flask app initialized on port {os.getenv('PORT')}")
+    app.logger.info(f"Flask app initialized on port {os.getenv('PORT')}")
 
     return app
