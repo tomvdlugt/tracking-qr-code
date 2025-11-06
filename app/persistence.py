@@ -24,7 +24,7 @@ def init_db(db_path):
   conn.commit()
   conn.close()
 
-def record_click(tag, db_path="data/clicks.db"):
+def record_click(tag, db_path="/data/clicks.db"):
   today = date.today().isoformat()
 
   conn = sqlite3.connect(db_path)

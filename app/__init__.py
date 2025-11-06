@@ -17,7 +17,7 @@ def create_app():
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
     load_config(app)
-    db_path = app.config.get("DB_PATH", "data/clicks.db")
+    db_path = app.config.get("DB_PATH", "/data/clicks.db")
     init_db(db_path)
 
 
