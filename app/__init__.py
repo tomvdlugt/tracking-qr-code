@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import sys
+os.environ.setdefault("PROMETHEUS_MULTIPROC_DIR", "/tmp/prometheus-multiproc-dir")
 from flask import Flask, request
 from app.config_check import validate_env
 from app.persistence import init_db, load_totals_by_tag
@@ -19,11 +20,7 @@ def create_app():
     db_path = app.config.get("DB_PATH", "data/clicks.db")
     init_db(db_path)
 
-    # restore clicks total
-    totals = load_totals_by_tag(app.config["DB_PATH"])
-    for tag, total in totals.items():
-        clicks.labels(tag=tag)._value.set(total)
-        app.logger.info(f"Loaded {total} clicks for tag '{tag}' from DB")
+
 
     app.url_map.strict_slashes = False
     from .extensions import limiter
@@ -34,6 +31,12 @@ def create_app():
     if os.path.exists(prom_dir):
         shutil.rmtree(prom_dir)
     os.makedirs(prom_dir, exist_ok=True)
+
+     # restore clicks total
+    totals = load_totals_by_tag(app.config["DB_PATH"])
+    for tag, total in totals.items():
+        clicks.labels(tag=tag)._value.set(total)
+        app.logger.info(f"Loaded {total} clicks for tag '{tag}' from DB")
 
     # --- Clean logger setup ---
     gunicorn_logger = logging.getLogger('gunicorn.error')
