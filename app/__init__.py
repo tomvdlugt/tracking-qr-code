@@ -4,6 +4,7 @@ import shutil
 import sys
 from flask import Flask, request
 from app.config_check import validate_env
+from app.routes.errors import register_error_handlers
 from .config import load_config
 from .routes import tracking, metrics, health
 
@@ -49,8 +50,9 @@ def create_app():
     app.register_blueprint(tracking.bp)
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
+  
+    register_error_handlers(app)
 
-
-    print(f"Flask app initialized on port {os.getenv('PORT')}")
+    app.logger.info(f"Flask app initialized on port {os.getenv('PORT')}")
 
     return app
