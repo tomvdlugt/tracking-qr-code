@@ -9,12 +9,11 @@ from .config import load_config
 from .routes import tracking, metrics, health
 
 def create_app():
-    # Validate environment once per worker. If required envs are not there, throw runtime exception
+    app = Flask(__name__)
     missing = validate_env(app)
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
-
-    app = Flask(__name__)
+    
     load_config(app)
     app.url_map.strict_slashes = False
     from .extensions import limiter
