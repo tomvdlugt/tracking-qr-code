@@ -10,7 +10,7 @@ from .routes import tracking, metrics, health
 
 def create_app():
     # Validate environment once per worker. If required envs are not there, throw runtime exception
-    missing = validate_env()
+    missing = validate_env(app)
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
 
@@ -50,7 +50,7 @@ def create_app():
     app.register_blueprint(tracking.bp)
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
-  
+
     register_error_handlers(app)
 
     app.logger.info(f"Flask app initialized on port {os.getenv('PORT')}")
