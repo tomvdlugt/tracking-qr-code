@@ -24,3 +24,4 @@ exec /usr/local/bin/gunicorn \
   --error-logfile - \
   --log-level info \
   app.main:app
+
