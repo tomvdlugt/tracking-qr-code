@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, time
 import os
 import sqlite3
 
@@ -25,19 +25,31 @@ def init_db(db_path):
   conn.close()
 
 def record_click(tag, db_path="/data/clicks.db"):
-  today = date.today().isoformat()
+  for attempt in range(10):
+    try:
+      today = date.today().isoformat()
 
-  conn = sqlite3.connect(db_path)
-  cursor = conn.cursor()
+      conn = sqlite3.connect(db_path)
+      cursor = conn.cursor()
 
-  cursor.execute("""
-    INSERT INTO daily_clicks(tag, day, count)
-    VALUES(?, ?, 1)
-    ON CONFLICT(tag, day) DO UPDATE SET count = count + 1;""", (tag, today)
-  )
+      cursor.execute("""
+        INSERT INTO daily_clicks(tag, day, count)
+        VALUES(?, ?, 1)
+        ON CONFLICT(tag, day) DO UPDATE SET count = count + 1;""", (tag, today)
+      )
 
-  conn.commit()
-  conn.close()
+      conn.commit()
+      conn.close()
+      return
+    except sqlite3.OperationalError as e:
+      if "locked" in str(e).lower():
+        time.sleep(0.05 * (attempt + 1))
+      else:
+        raise
+  raise RuntimeError("DB stayed locked too long")
+
+
+
 
 def load_totals_by_tag(db_path):
   conn = sqlite3.connect(db_path)
