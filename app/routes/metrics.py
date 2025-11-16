@@ -1,6 +1,5 @@
-import os
 from flask import Blueprint, request, abort, current_app
-from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST, REGISTRY
 from app.extensions import limiter
 
 bp = Blueprint("metrics", __name__)
@@ -13,11 +12,10 @@ def metrics():
     if metrics_token and token != metrics_token:
         abort(403)
 
-    registry = CollectorRegistry()
-    data = generate_latest(registry)
+    data = generate_latest(REGISTRY)
 
      # 🧠 Debug logs
-    metric_count = len(list(registry.collect()))
+    metric_count = len(list(REGISTRY.collect()))
     current_app.logger.info(f"/metrics called — {metric_count} metric families registered")
 
     return data, 200, {"Content-Type": CONTENT_TYPE_LATEST}
