@@ -1,15 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
-# Ensure gunicorn is visible
-export PATH="/usr/local/bin:$PATH"
+unset PROMETHEUS_MULTIPROC_DIR
 
-# ---- Prometheus multiprocess dir (shared across workers) ----
-if [ -z "$PROM_DIR" ]; then
-  PROM_DIR="/data/prometheus"
-fi
-
-echo "🔧 PATH is: $PATH"
 echo "🔍 gunicorn binary at: $(which gunicorn || echo 'NOT FOUND')"
 
 # ---- Start Gunicorn ----
