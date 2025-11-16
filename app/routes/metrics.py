@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, abort, current_app
-from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST, multiprocess
+from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 from app.extensions import limiter
 
 bp = Blueprint("metrics", __name__)
@@ -14,12 +14,10 @@ def metrics():
         abort(403)
 
     registry = CollectorRegistry()
-    multiprocess.MultiProcessCollector(registry)
     data = generate_latest(registry)
 
      # 🧠 Debug logs
     metric_count = len(list(registry.collect()))
     current_app.logger.info(f"/metrics called — {metric_count} metric families registered")
-    current_app.logger.info(f"PROMETHEUS_MULTIPROC_DIR={os.getenv('PROMETHEUS_MULTIPROC_DIR')}")
 
     return data, 200, {"Content-Type": CONTENT_TYPE_LATEST}

@@ -2,7 +2,6 @@ import logging
 import os
 import shutil
 import sys
-os.environ.setdefault("PROMETHEUS_MULTIPROC_DIR", "/tmp/prometheus-multiproc-dir")
 from flask import Flask, request
 from app.config_check import validate_env
 from app.persistence import init_db, load_totals_by_tag
@@ -18,19 +17,12 @@ def create_app():
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
     load_config(app)
     db_path = app.config.get("DB_PATH", "/data/clicks.db")
-    init_db(db_path)
+    init_db(db_path)  
 
 
 
     app.url_map.strict_slashes = False
     from .extensions import limiter
-    # --- Prometheus multiprocess setup ---
-    prom_dir = app.config.get("PROM_DIR") or "/tmp/prometheus-multiproc-dir"
-    os.environ["PROMETHEUS_MULTIPROC_DIR"] = str(prom_dir)
-    # Clean old metric files before starting (important!)
-    if os.path.exists(prom_dir):
-        shutil.rmtree(prom_dir)
-    os.makedirs(prom_dir, exist_ok=True)
 
      # restore clicks total
     totals = load_totals_by_tag(app.config["DB_PATH"])
