@@ -17,7 +17,7 @@ def create_app():
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
     load_config(app)
     db_path = app.config.get("DB_PATH", "/data/clicks.db")
-    init_db(db_path)  
+    init_db(db_path)
 
 
 
@@ -27,7 +27,8 @@ def create_app():
      # restore clicks total
     totals = load_totals_by_tag(app.config["DB_PATH"])
     for tag, total in totals.items():
-        clicks.labels(tag=tag)._value.set(total)
+        if total > 0:
+          clicks.labels(tag=tag).inc(total)
         app.logger.info(f"Loaded {total} clicks for tag '{tag}' from DB")
 
     # --- Clean logger setup ---
