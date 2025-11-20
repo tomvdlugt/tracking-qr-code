@@ -8,7 +8,8 @@ bp = Blueprint("tracking", __name__)
 
 @bp.route("/t/", defaults={"tag": None})
 @bp.route("/t/<tag>")
-@limiter.limit(lambda: current_app.config["TRACK_ROUTE_LIMIT"])
+# Disabled limiter to check if its really needed
+# @limiter.limit(lambda: current_app.config["TRACK_ROUTE_LIMIT"])
 def track(tag):
     tag = (tag or "").lower().strip("/")
     ua = request.headers.get("User-Agent", "").lower()
