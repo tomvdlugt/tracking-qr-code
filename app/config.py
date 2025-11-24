@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 from load_config import load_json_config
 
+#loads public config
+load_json_config("config.json")
 #loads dotenv if present
 load_dotenv()
 
@@ -46,16 +48,11 @@ class ProductionConfig(Config):
        self.DEBUG = False
        self.TESTING = False
 
-
-
 class DevelopmentConfig(Config):
     """Overrides for local dev"""
     def __init__(self):
        super().__init__()
        self.DEBUG = True
-
-
-
 
 def load_config(app):
     """Applies the proper config class to the Flask app."""
