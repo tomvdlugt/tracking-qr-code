@@ -48,16 +48,11 @@ class ProductionConfig(Config):
        self.DEBUG = False
        self.TESTING = False
 
-
-
 class DevelopmentConfig(Config):
     """Overrides for local dev"""
     def __init__(self):
        super().__init__()
        self.DEBUG = True
-
-
-
 
 def load_config(app):
     """Applies the proper config class to the Flask app."""
