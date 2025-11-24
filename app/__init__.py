@@ -9,13 +9,10 @@ from app.routes.errors import register_error_handlers
 from app.extensions import clicks
 from .config import load_config
 from .routes import tracking, metrics, health
-from app.config_loader import load_json_config
 
 def create_app():
     app = Flask(__name__)
 
-    #loads public config
-    load_json_config("config.json")
     missing = validate_env(app)
     if missing:
         raise RuntimeError(f"Missing required environment variables: {','.join(missing)}")
