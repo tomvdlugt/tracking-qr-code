@@ -54,7 +54,6 @@ class DevelopmentConfig(Config):
 def load_config(app):
     """Applies the proper config class to the Flask app."""
     env = os.getenv("FLASK_ENV", "production").lower()
-    load_json_config()
     config = DevelopmentConfig() if env == "development" else ProductionConfig()
     app.config.from_mapping({
         key: value for key, value in config.__dict__.items() if key.isupper()
