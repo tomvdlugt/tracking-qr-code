@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 from load_config import load_json_config
 
+#loads public config
+load_json_config("config.json")
 #loads dotenv if present
 load_dotenv()
 
