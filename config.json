@@ -1,4 +1,4 @@
 {
-  "TAGS": ["reclame-bord","facebook","niet-thuis","voorverkoop","gantel","whatsapp"],
+  "ALLOWED_TAGS": ["reclame-bord","facebook","niet-thuis","voorverkoop","gantel","whatsapp"],
   "BASE_URL": "https://bestellen.scoutingwateringen.nl/t/"
 }
