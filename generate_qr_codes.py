@@ -1,12 +1,19 @@
+import json
 import logging
 import os
 import shutil
 import qrcode
 from dotenv import load_dotenv
 
-load_dotenv()
-base_url = os.getenv("BASE_URL")
-tags = os.getenv("ALLOWED_TAGS", "").split(",")
+with open("./config.json") as f:
+    cfg = json.load(f)
+
+base_url = cfg["BASE_URL"]
+tags = cfg["ALLOWED_TAGS"]
+
+print(repr(tags))
+print(len(tags))
+
 
 OUTPUT_DIR = "qr-codes"
 
