@@ -5,6 +5,7 @@ import sys
 from flask import Flask, request
 from app.config_check import validate_env
 from app.persistence import init_db, load_totals_by_tag
+from app.routes import admin
 from app.routes.errors import register_error_handlers
 from app.extensions import clicks
 from .config import load_config
@@ -56,6 +57,7 @@ def create_app():
     app.register_blueprint(tracking.bp)
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
+    app.register_blueprint(admin.bp)
 
     register_error_handlers(app)
 
