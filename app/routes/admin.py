@@ -8,6 +8,25 @@ from app.extensions import limiter
 
 bp = Blueprint("admin", __name__)
 
+
+@bp.route("/_admin/show", methods=["GET"])
+def admin_show():
+    token = request.args.get("token")
+    if token != "SUPER_SECRET":
+        return "forbidden", 403
+
+    tag = request.args.get("tag")
+
+    db_path = current_app.config["DB_PATH"]
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    cur.execute("SELECT tag, day, count FROM daily_clicks WHERE tag = ?", (tag,))
+    rows = cur.fetchall()
+
+    conn.close()
+    return {"rows": rows}
+
 @limiter.exempt
 @bp.route("/_admin/fix", methods=["POST"])
 def admin_fix():
