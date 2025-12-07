@@ -1,13 +1,14 @@
 
 
 import sqlite3
-from flask import Blueprint, current_app, request
+from flask import Blueprint, app, current_app, request
 from app.extensions import limiter
 
 
 
 bp = Blueprint("admin", __name__)
 
+app.logger.info("Admin blueprint loaded")
 
 @bp.route("/_admin/show", methods=["GET"])
 def admin_show():
