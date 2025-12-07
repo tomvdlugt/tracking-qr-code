@@ -8,8 +8,6 @@ from app.extensions import limiter
 
 bp = Blueprint("admin", __name__)
 
-app.logger.info("Admin blueprint loaded")
-
 @bp.route("/_admin/show", methods=["GET"])
 def admin_show():
     token = request.args.get("token")
