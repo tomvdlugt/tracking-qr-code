@@ -2,12 +2,13 @@
 
 import sqlite3
 from flask import Blueprint, current_app, request
-from flask_limiter import Limiter
+from app.extensions import limiter
+
 
 
 bp = Blueprint("admin", __name__)
 
-@Limiter.exempt
+@limiter.exempt
 @bp.route("/_admin/fix", methods=["POST"])
 def admin_fix():
     token = request.args.get("token")
@@ -28,5 +29,6 @@ def admin_fix():
     )
     conn.commit()
     conn.close()
+    # added a comment
 
     return {"status": "ok", "tag": tag, "day": day, "new_value": new_value}
