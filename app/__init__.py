@@ -60,7 +60,7 @@ def create_app():
     app.register_blueprint(tracking.bp)
     app.register_blueprint(metrics.bp)
     app.register_blueprint(health.bp)
-    app.register_blueprint(admin.bp)
+   #  app.register_blueprint(admin.bp)
 
     register_error_handlers(app)
 
