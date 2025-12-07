@@ -8,6 +8,9 @@ from app.persistence import init_db, load_totals_by_tag
 from app.routes import admin
 from app.routes.errors import register_error_handlers
 from app.extensions import clicks
+from app.routes import admin
+from . import admin
+
 from .config import load_config
 from .routes import tracking, metrics, health, admin
 
