@@ -9,7 +9,7 @@ from app.routes import admin
 from app.routes.errors import register_error_handlers
 from app.extensions import clicks
 from .config import load_config
-from .routes import tracking, metrics, health
+from .routes import tracking, metrics, health, admin
 
 def create_app():
     app = Flask(__name__)
