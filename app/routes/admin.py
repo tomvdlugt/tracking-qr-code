@@ -51,3 +51,13 @@ def admin_fix():
     # added a comment
 
     return {"status": "ok", "tag": tag, "day": day, "new_value": new_value}
+
+@bp.route("/_admin/dbpath")
+def show_db_path():
+    return {"db_path": current_app.config["DB_PATH"]}
+
+@bp.route("/_admin/list")
+def list_db():
+    import os
+    path = os.path.dirname(current_app.config["DB_PATH"])
+    return {"files": os.listdir(path)}
